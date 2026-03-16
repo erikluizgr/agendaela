@@ -95,9 +95,9 @@ export async function sendAppointmentReminder(appointmentId: string): Promise<bo
     return false
   }
 
-  const client  = appt.client  as { full_name: string; phone: string | null } | null
-  const service = appt.service as { name: string } | null
-  const profile = appt.profile as { full_name: string; business_name: string | null; slug: string | null } | null
+  const client  = appt.client  as unknown as { full_name: string; phone: string | null } | null
+  const service = appt.service as unknown as { name: string } | null
+  const profile = appt.profile as unknown as { full_name: string; business_name: string | null; slug: string | null } | null
 
   if (!client?.phone) {
     console.warn(`[zapi] Cliente sem telefone — agendamento ${appointmentId}`)
@@ -151,9 +151,9 @@ export async function sendBookingConfirmation(appointmentId: string): Promise<bo
 
   if (!appt) return false
 
-  const client  = appt.client  as { full_name: string; phone: string | null } | null
-  const service = appt.service as { name: string } | null
-  const profile = appt.profile as {
+  const client  = appt.client  as unknown as { full_name: string; phone: string | null } | null
+  const service = appt.service as unknown as { name: string } | null
+  const profile = appt.profile as unknown as {
     full_name: string; business_name: string | null
     phone: string | null; address: string | null
   } | null
@@ -201,7 +201,7 @@ export async function sendBirthdayMessage(
 
   if (!client?.phone) return false
 
-  const profile = client.profile as { business_name: string | null; full_name: string; slug: string | null } | null
+  const profile = client.profile as unknown as { business_name: string | null; full_name: string; slug: string | null } | null
   const nome    = client.full_name.split(' ')[0]
   const link    = profile?.slug
     ? `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://agendaela.com.br'}/${profile.slug}`

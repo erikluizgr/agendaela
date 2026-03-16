@@ -256,7 +256,7 @@ export default function FinanceiroPage() {
                     <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false}
                       tickFormatter={v => `R$${(v / 1000).toFixed(0)}k`} />
                     <Tooltip
-                      formatter={(v: number) => [fmt(v), 'Faturamento']}
+                      formatter={(v) => [fmt(Number(v ?? 0)), 'Faturamento']}
                       contentStyle={{ borderRadius: 12, border: '1px solid #f3f4f6', fontSize: 12 }}
                     />
                     <Bar dataKey="total" radius={[6, 6, 0, 0]}>

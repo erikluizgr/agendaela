@@ -52,8 +52,8 @@ export async function GET(request: NextRequest) {
 
     const total    = appts.reduce((s, a) => s + (a.price ?? 0), 0)
     const primeiro = appts[0]
-    const client0  = primeiro.client as { full_name: string } | null
-    const service0 = primeiro.service as { name: string } | null
+    const client0  = primeiro.client as unknown as { full_name: string } | null
+    const service0 = primeiro.service as unknown as { name: string } | null
     const hora0    = format(parseISO(primeiro.starts_at), 'HH:mm')
     const nome     = profile.full_name.split(' ')[0]
 

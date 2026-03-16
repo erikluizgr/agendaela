@@ -1,9 +1,12 @@
 /**
- * lib/plans.ts — Feature flags por plano + hook usePlan + componente PlanGate
+ * lib/plans.tsx — Feature flags por plano + hook usePlan + componente PlanGate
  */
 'use client'
 
 import { useState, useEffect } from 'react'
+import React from 'react'
+import Link from 'next/link'
+import { Lock } from 'lucide-react'
 import { createBrowserClient } from '@supabase/ssr'
 
 // ── Definição dos planos ──────────────────────────────────────────────────────
@@ -13,7 +16,7 @@ export type PlanId = 'trial' | 'solo' | 'studio' | 'clinica'
 export interface PlanFeatures {
   label:               string
   price_monthly:       number
-  price_annual:        number   // por mês, no plano anual
+  price_annual:        number
   professionals:       number   // -1 = ilimitado
   whatsapp_limit:      number   // -1 = ilimitado; 0 = sem WhatsApp
   ai_suggestions:      boolean
@@ -41,7 +44,7 @@ export const PLANS: Record<PlanId, PlanFeatures> = {
   solo: {
     label:             'Solo',
     price_monthly:     59,
-    price_annual:      49,   // R$49/mês × 12
+    price_annual:      49,
     professionals:     1,
     whatsapp_limit:    100,
     ai_suggestions:    false,
@@ -92,7 +95,7 @@ export function hasFeature(userPlan: PlanId, requiredPlan: PlanId): boolean {
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
 export function usePlan() {
-  const [plan, setPlan] = useState<PlanId>('trial')
+  const [plan,    setPlan]    = useState<PlanId>('trial')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -116,18 +119,14 @@ export function usePlan() {
 
   return {
     plan,
-    features:   PLANS[plan],
+    features:  PLANS[plan],
     loading,
-    can:        (feat: keyof PlanFeatures) => !!PLANS[plan][feat],
-    hasAccess:  (requiredPlan: PlanId) => hasFeature(plan, requiredPlan),
+    can:       (feat: keyof PlanFeatures) => !!PLANS[plan][feat],
+    hasAccess: (requiredPlan: PlanId) => hasFeature(plan, requiredPlan),
   }
 }
 
 // ── PlanGate component ────────────────────────────────────────────────────────
-
-import React from 'react'
-import Link from 'next/link'
-import { Lock } from 'lucide-react'
 
 export function PlanGate({
   plan:     requiredPlan,
@@ -142,7 +141,6 @@ export function PlanGate({
 
   if (loading) return null
   if (hasFeature(userPlan, requiredPlan)) return <>{children}</>
-
   if (fallback) return <>{fallback}</>
 
   return (
